@@ -101,7 +101,7 @@ const reposHandler = {
   endpoints: [
   {% for repository in site.github.public_repositories %}
     {% if repository.description contains "#docs" and repository.name != "docs" %}
-    `https://pages.github.schibsted.io/blocket/{{repository.name}}/_assets/js/repo-info.js`,
+    `{{site.host_org_url}}/{{repository.name}}/_assets/js/repo-info.js`,
     {% endif%}
   {%endfor%}
   ],
@@ -166,7 +166,7 @@ const reposHandler = {
         if (match) {
           cls.isExternal = false;
           cls.repo = repo.name;
-          if (repo.name !== "Blocket Docs") {
+          if (repo.name !== "{{site.main_docs_name}}") {
             cls.isExternal = true;
           }
           classes.push(cls)

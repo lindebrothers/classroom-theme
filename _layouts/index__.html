@@ -1,0 +1,251 @@
+---
+layout: default
+---
+<style>
+  .site-promotion {
+    text-align: center;
+    padding: 20px;
+    height: calc(50vh);
+    min-height: 600px;
+    max-height: 650px;
+    border-top: 1px solid #679bcf;
+    color: #fff;
+    background-color: #4182c3;
+  }
+
+  .site-promotion a:link,
+  .site-promotion a:active,
+  .site-promotion a:hover,
+  .site-promotion a:visited {
+     color: white;
+     text-decoration: underline;
+}
+.site-promotion h3 {
+  margin-bottom: 10px;
+}
+.site-promotion h6 {
+  margin-top: 10px;
+}
+
+.circle {
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: #fff;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+}
+.bui-btn {
+  border-radius: 6px;
+  width: 343px;
+  height: 56px;
+  background-color: #4182c3;
+  color: white;
+}
+.card {
+  width: 50%;
+  text-align: center;
+  background: #f5f8ff;
+  margin: 10px 10px 10px 10px;
+  padding: 30px;
+  text-align: left;
+}
+.card h5 {
+  margin: 0px 0 5px 0;
+}
+.card-icon {
+  font-size: 40px;
+}
+.card code {
+  font-size: 1.1rem;
+}
+
+</style>
+<main class="main-content-innner-index">
+  <section class="site-promotion">
+    <div class="flexView" style="flex-direction: column;">
+      <img src="{{ '/_assets/images/theme/blocket-docs-promo.svg' | prepend: site.baseurl}}" width="45%" />
+      <h1 style="line-height: 3.5rem;">{{site.description}}</h1>
+      <h4>
+
+          {% assign guides = site.guides-enviroment | sort: 'index' | first %}
+
+        <a href="{{ guides.url | prepend: site.baseurl}}">How to create code documentation</a>
+      </h4>
+      <div class="flexView" style="flex-direction: row; height: unset; width: 400px; margin-top: 25px;">
+        <div class="flexView" style="height: 50px; width: 50px; margin: 10px;">
+            <a href="https://pages.github.com/" target="_blank">
+              <img src="{{ '/_assets/images/docs/github-pages-logo.svg' | prepend: site.baseurl}}" width="125" />
+            </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="site-section" style="min-height: 400px; margin-top: 30px;">
+    <div class="mdc-layout-grid">
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-12">
+          <h2>Highlighted tags</h2>
+          <div class="mdc-list-divider"></div>
+        </div>
+        {% assign doc-tags = site.data.doc-tags | sort: 'id' %}
+        {% assign spin = 0 %}
+        {% for doc-tag in doc-tags %}
+          {% assign break = forloop.length | divided_by: 3 | round %}
+          {% if spin == 0 %}
+          <div class="mdc-layout-grid__cell--span-4">
+            <ul class="mdc-list mdc-list--two-line" aria-orientation="vertical">
+          {% endif%}
+            <a class="no-decoration" href="{{ doc-tag.link | prepend: site.baseurl}}">
+            <li class="mdc-list-item">
+              <span class="mdc-list-item__graphic material-icons">{{ doc-tag.icon }}</span>
+              <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">#{{doc-tag.id}}</span>
+                <span class="mdc-list-item__secondary-text">{{doc-tag.title}}</span>
+              </span>
+            </li>
+          </a>
+          {% if spin == break or forloop.last %}
+              {% assign spin = 0 %}
+              </ul>
+            </div>
+          {% else %}
+            {% assign spin = spin | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      
+
+
+        <div class="mdc-layout-grid__cell--span-12">
+            <h2>Other frequent tags</h2>
+            <div class="mdc-list-divider"></div>
+        </div>
+      </div>
+      <div id="common-tags-result" class="mdc-layout-grid__inner"></div>
+
+
+      <script>
+
+        const getMostCommonTags = () => {
+          const highlightedTags = [{% for doc-tag in doc-tags %}{name: '{{doc-tag.id}}'}{% if forloop.last == false %},{% endif%}{% endfor %}]
+          const reduce = (needle, _hay) => {
+            let hay = _hay.slice()
+            const selected = hay.find(item => item.name === needle)
+            if (selected) {
+              selected.count = Math.floor(Number(selected.count) + 1 )
+              hay = hay.filter(item => item.name !== needle)
+              hay.push(selected)
+            } else {
+              if (!highlightedTags.some(hlt => hlt.name === needle)) {
+                hay.push({
+                  name: needle,
+                  count: 1,
+                })
+              }
+            }
+            return hay
+          }
+
+          let mostCommonTags = []
+          window.repoInfo.forEach(repo => {
+            repo.tags.forEach(tag => {
+              mostCommonTags = reduce(tag, mostCommonTags)
+            })
+            repo.classes.forEach(cls => {
+              cls.tags.forEach(tag => {
+                mostCommonTags = reduce(tag, mostCommonTags)
+              })
+              cls.pages.forEach(page => {
+                if (page.hasOwnProperty('tags')) {
+                  page.tags.forEach(tag => {
+                    mostCommonTags = reduce(tag, mostCommonTags)
+                  })
+                }
+              })
+            })
+          })
+          mostCommonTags = reposHandler.sortArray(mostCommonTags, 'count')
+          return mostCommonTags
+        }
+
+        const printResult = (array) => {
+
+          var node = ``
+          const array_length = array.length
+
+          array = utils.splitUp(array, 3)
+          array.forEach(col => {
+            node = `${node}<div class="mdc-layout-grid__cell--span-4"><ul class="mdc-list">`
+            col.forEach(item => {
+              node = `${node}
+              <a class="no-decoration" href="/{{site.main_docs_repo_url}}/tags/#${ item.name }">
+                <li class="mdc-list-item">
+                  <span class="mdc-list-item__graphic material-icons">star</span>
+                  <span class="mdc-list-item__text">
+                    ${ item.name }
+                  </span>
+                </li>
+              </a>
+              `
+            })
+            node = `${node}</ul></div>`
+          });
+          return node
+        }
+
+        const collectCommonTags = () => {
+          let arr = getMostCommonTags() || []
+          if (arr.length > 14) {
+            arr = arr.splice(0,15)
+          }
+          let output = ''
+          output = `${output}${printResult(arr)}`
+          document.getElementById(`common-tags-result`).innerHTML = output;
+        }
+
+        addToHook("REPOS_LOADED", collectCommonTags)
+      </script>
+
+      <div class="mdc-layout-grid__cell--span-12">
+          <h2>Repositories</h2>
+          <p>All repositories within {{site.main_docs_name}}</p>
+          <div class="mdc-list-divider"></div>
+          <div class="mdc-layout-grid__inner" id="repos-container"></div>
+        </div>
+        <script>
+          const printClasses = () => {
+            var node = ''
+            let array = repoInfo.slice()
+            array = reposHandler.sortArray2(array, 'name')
+            const array_length = array.length
+            array = utils.splitUp(array, 3)
+            array.forEach(col => {
+              node = `${node}<div class="mdc-layout-grid__cell--span-4">
+                  <ul class="mdc-list mdc-list--two-line" aria-orientation="vertical">`
+              col.forEach(item => {
+                item.icon = 'home'
+                node = `${node}
+                  <a class="no-decoration" href="${item.baseurl}">
+                    <li class="mdc-list-item">
+                      <span class="mdc-list-item__graphic material-icons">${ item.icon }</span>
+                      <span class="mdc-list-item__text">
+                        <span class="mdc-list-item__primary-text">${ item.name }</span>
+                        <span class="mdc-list-item__secondary-text">${item.description}</span>
+                      </span>
+                    </li>
+                  </a>
+                `
+              })
+              node = `${node}</ul></div>`
+            });
+            document.getElementById("repos-container").innerHTML = node;
+          }
+          addToHook("REPOS_LOADED", printClasses);
+        </script>
+    </div>
+  </section>
+  {{ content }}
+</main>
+{% include contribution.html %}
+{% include footer.html %}

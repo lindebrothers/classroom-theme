@@ -8,6 +8,7 @@ repository_name: classroom-theme
 # template configurations -------------------
 main_docs_repo_url: /
 main_docs_name: lindebrosthers classroom theme
+host_url: https://www.github.com
 footer_sign: by developers @ Blocket
 logo_url: /_assets/images/theme/logo-inverted.svg
 # Classrooms and Pages config ---------------------------------
