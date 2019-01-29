@@ -1,23 +1,18 @@
-# Site config ----------------------------------
-title: Docs theme
-description: Docs theme description
-baseurl: "/lindebrothers/classroom-theme"
+# Site config # REQUIRED CONFIGURATIONS # ---------------------
+title: Classroom theme
+description: A theme for jekyll
+baseurl: /lindebrothers/classroom-theme
 repository: lindebrothers/classroom-theme
 repository_name: classroom-theme
+repo-tags:
+  - sample
 
-# template configurations -------------------
-main_docs_repo_url: /
-main_docs_name: lindebrosthers classroom theme
-host_url: https://www.github.com
-footer_sign: by developers @ Blocket
-logo_url: /_assets/images/theme/logo-inverted.svg
-host_org_name: https://pages.github.schibsted.io/blocket
 # Classrooms and Pages config ---------------------------------
 collections:
   classroom:
     output: true
     tags:
-      - docs
+      - sample
     title: Sample classroom in an external repo
 
 defaults:
@@ -27,35 +22,38 @@ defaults:
       type: classroom
     values:
       authors:
-        - jlindebro
+        - jonas-linde
       permalink: /:collection/:name
 
+# Preset build config ----------------------------------
+blocket_docs_baseurl: /blocket/docs
 
-# Build config ----------------------------------
-#markdown: kramdown
-#kramdown:
-#  input: GFM
-#  syntax_highlighter: rouge
-#  syntax_highlighter_opts:
-#    css_class: 'hoppsan'
-markdown: redcarpet
-highlighter: pygments
-markdown: redcarpet
-redcarpet:
-  extensions: ["no_intra_emphasis", "fenced_code_blocks", "tables", "with_toc_data"]
+# template configurations -------------------
+main_docs_repo_url: https://pages.github.com/lindebrothers/classroom-theme
+main_docs_name: lindebrosthers classroom theme
+repository_host_url: https://www.github.com
+pages_url_with_org: https://pages.github.com/lindebrothers
+avatar_base_url: https://www.github.com
 
+footer_sign: by developers
+# site_logo_url:
+
+markdown: kramdown
 include: ['_posts', 'assets', '_pages', '_series']
 exclude: ['.sass_cache', 'README.md', 'docker-compose.yml', 'dev', 'Dockerfile']
 sass:
   sass_dir: 'assets/_sass'
 plugins:
+  - jekyll-mentions
+  - jekyll-avatar
+  - jekyll-seo-tag
+  - jekyll-redirect-from
   - jekyll-github-metadata
 
 whitelist:
   - jekyll-redirect-from
+
+jekyll-mentions:
+  base_url: https://www.github.com
+
 collections_dir: classrooms
-
-# Pages config ---------------------------------
-
-
-

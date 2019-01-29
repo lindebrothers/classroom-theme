@@ -63,10 +63,10 @@ layout: default
           <h4>View the code</h4>
           <div class="mobile-reset-container" style="min-width: 800px; min-height: 100px; margin: 20px; 0 20px 0">
               <div class="flexViewRow">
-                  <a href="{{site.host_url}}/{{site.repository}}">
+                  <a href="{{site.repository_host_url}}/{{site.repository}}">
                     <img src="{{ '/assets/images/theme/github-icon.svg' | prepend: site.baseurl}}" width="64" style="padding-right: 16px;" />
                   </a>
-                  <a class="mobile-remove" href="{{site.host_url}}{{site.baseurl}}">
+                  <a class="mobile-remove" href="{{site.repository_host_url}}{{site.baseurl}}">
                     @{{site.repository_name}}
                   </a>
               </div>

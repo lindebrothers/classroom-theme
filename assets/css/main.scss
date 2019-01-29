@@ -17,7 +17,7 @@ body {
 @charset "utf-8";
 
 .main-content-innner-index {
-  min-height: calc(100vh - 64px - -73px - 175px - 70px - 534px);
+  min-height: calc(100vh - 64px - 80px - 327px - 100px);
 }
 
 .main-content {
@@ -25,10 +25,7 @@ body {
   height: 100%;
 }
 .main-content-innner-page {
-  min-height: calc(100vh - 64px - 180px - 1px);
-}
-.main-content-innner-search {
-  min-height: calc(100vh - 64px - 180px - 29px);
+  min-height: calc(100vh - 64px - 100px);
 }
 .app-bar {
   position: absolute;
@@ -201,82 +198,86 @@ a:hover {
   font-weight: bold;
 }
 
-article a[name]:link,
-article a[name]:visited,
-article a[name]:active,
-article a[name]:hover, {
-  text-decoration: none !important;
-  color: black;
+
+.main-content-innner-index {
+  .site-promotion {
+    text-align: center;
+    padding: 20px;
+    height: calc(50vh);
+    min-height: 600px;
+    max-height: 650px;
+    border-top: 1px solid #679bcf;
+    color: #fff;
+    background-color: #4182c3;
+  }
+
+  .site-promotion a:link,
+  .site-promotion a:active,
+  .site-promotion a:hover,
+  .site-promotion a:visited {
+    color: white;
+    text-decoration: underline;
+  }
+  .site-promotion h3 {
+    margin-bottom: 10px;
+  }
+  .site-promotion h6 {
+    margin-top: 10px;
+  }
+
+  .circle {
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+    background: #fff;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+  }
+  .card {
+    background: #f5f8ff;
+    padding: 30px;
+    text-align: left;
+
+    h5 {
+      margin: 0px 0 5px 0;
+    }
+    .card-icon {
+      font-size: 40px;
+    }
+    code {
+      font-size: 1.1rem;
+    }
+  }
 }
 
-// @import "@material/button/mdc-button";
-// @import "@material/card/mdc-card";
-// @import "@material/checkbox/mdc-checkbox";
-// @import "@material/chips/mdc-chips";
-// @import "@material/dialog/mdc-dialog";
-// @import "@material/drawer/mdc-drawer";
-// @import "@material/elevation/mdc-elevation";
-// @import "@material/fab/mdc-fab";
-// @import "@material/floating-label/mdc-floating-label";
-// @import "@material/form-field/mdc-form-field";
-// @import "@material/grid-list/mdc-grid-list";
-// @import "@material/icon-button/mdc-icon-button";
-// @import "@material/icon-toggle/mdc-icon-toggle";
-// @import "@material/image-list/mdc-image-list";
-// @import "@material/layout-grid/mdc-layout-grid";
-// @import "@material/line-ripple/mdc-line-ripple";
-// @import "@material/linear-progress/mdc-linear-progress";
-// @import "@material/list/mdc-list";
-// @import "@material/menu/mdc-menu";
-// @import "@material/menu-surface/mdc-menu-surface";
-// @import "@material/notched-outline/mdc-notched-outline";
-// @import "@material/radio/mdc-radio";
-// @import "@material/ripple/mdc-ripple";
-// @import "@material/select/mdc-select";
-// @import "@material/slider/mdc-slider";
-// @import "@material/snackbar/mdc-snackbar";
-// @import "@material/switch/mdc-switch";
-// @import "@material/tab/mdc-tab";
-// @import "@material/tab-bar/mdc-tab-bar";
-// @import "@material/tab-indicator/mdc-tab-indicator";
-// @import "@material/tab-scroller/mdc-tab-scroller";
-// @import "@material/textfield/mdc-text-field";
-// @import "@material/theme/mdc-theme";
-// @import "@material/toolbar/mdc-toolbar";
-// @import "@material/top-app-bar/mdc-top-app-bar";
-// @import "@material/typography/mdc-typography";
-// @import "syntax-highlighting";
 
-// h1 {
-//   margin: 2rem 0 1rem 0;
-//   @include mdc-typography('headline1')
-// }
-// h2 {
-//   margin: 2rem 0 1rem 0;
-//   @include mdc-typography('headline2')
-// }
-// h3 {
-//   margin: 2rem 0 1rem 0;
-//   @include mdc-typography('headline3')
-// }
-// h4 {
-//   margin: 2rem 0 1rem 0;
-//   @include mdc-typography('headline4')
-// }
-// h5 {
-//   margin: 2rem 0 1rem 0;
-//   @include mdc-typography('headline5')
-// }
-// h6 {
-//   margin: 2rem 0 1rem 0;
-//   @include mdc-typography('headline6')
-// }
-// body {
-//   @include mdc-typography('body1')
-// }
-// caption {
-//   @include mdc-typography('caption')
-// }
-// button {
-//   @include mdc-typography('button')
-// }
+@media (min-width: 1200px) {
+  .mdc-layout-grid {
+      width: 1200px;
+  }
+}
+@media (max-width: 840px) {
+  .mobile-flex-wrap {
+    flex-flow: wrap;
+  }
+  .mobile-flex-reset {
+    flex-flow: wrap !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+  }
+  .mobile-reset-container {
+    width: 100% !important;
+    min-width: unset !important;
+    min-height: unset !important;
+  }
+  .truncate {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mobile-remove {
+    display: none;
+  }
+}

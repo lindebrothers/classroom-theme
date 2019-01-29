@@ -1,60 +1,11 @@
-
-
-
-
-{% for site_collection in site.collections %}
-  {% if site_collection.label == page.collection %}
-    {% assign slack_channel = site_collection.slack_channel %}
-    {% assign slack_channel_id = site_collection.slack_channel_id %}
-    {% assign collection_tags = site_collection.tags %}
-    {% assign collection_tags_size = collection_tags | size %}
-  {% endif %}
-{% endfor %}
-
-{% if slack_channel == null%}
-  {% assign slack_channel = site.data.slack.default_channel_name %}
-{% endif %}
-{% if slack_channel_id == null %}
-  {% assign slack_channel_id = site.data.slack.default_channel_id %}
-{% endif %}
-
-
 <!DOCTYPE html>
 <html>
-<style>
- @media (min-width: 1200px) {
-  .mdc-layout-grid {
-      width: 1200px;
-  }
-
-}
-@media (max-width: 840px) {
-  .mobile-flex-wrap {
-    flex-flow: wrap;
-  }
-  .mobile-flex-reset {
-    flex-flow: wrap !important;
-    justify-content: flex-start !important;
-    align-items: flex-start !important;
-  }
-  .truncate {
-    width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .mobile-remove {
-    display: none;
-  }
-}
-</style>
   {% include head.html %}
-
   <body class="mdc-typography">
     <aside class="mdc-drawer mdc-drawer--dismissible" data-mdc-auto-init="MDCDrawer">
       <div class="mdc-drawer__content">
         <nav class="mdc-list">
-          <a class="mdc-list-item mdc-list-item--activated" href="{{site.main_docs_repo_url}}" aria-selected="true">
+          <a class="mdc-list-item mdc-list-item--activated" href="/blocket/docs/" aria-selected="true">
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">home</i>
             <span class="mdc-list-item__text">{{site.main_docs_name}}</span>
           </a>
@@ -90,8 +41,8 @@
         <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start ">
             <a href="#" class="material-icons mdc-top-app-bar__navigation-icon no-decoration">menu</a>
           <span class="mdc-top-app-bar__title">
-            <a class="no-decoration white-link" href="{{ '/' | prepend: site.baseurl}}">
-              <img class="app-bar-logo" src="{{ site.logo_url | prepend: site.baseurl}}" />
+            <a class="no-decoration white-link" href="{{ '/' | prepend: site.main_docs_repo_url}}">
+              <img class="app-bar-logo" src="{{ '/assets/images/theme/blocket-symbol-inverted.svg' | prepend: site.baseurl}}" />
               {{site.main_docs_name}}
             </a>
           </span>
@@ -127,7 +78,6 @@
     <div class="mdc-drawer-app-content">
       <div class="main-content" id="main-content" onClick="document.querySelector('.mdc-drawer').MDCDrawer.foundation_.close()">
         <div class="mdc-top-app-bar--fixed-adjust">
-
           <div style="width: 100%; background-color: #F0F5FB;">
             <div class="mdc-layout-grid">
               <div class="mdc-layout-grid__inner">
@@ -141,16 +91,19 @@
                       </div>
                       <div class="flexViewRow" style="align-items: center; justify-content: flex-end; width: 230px;">
                         <div>
-                          <a href="/{{site.github.repository_nwo}}">
+                          <a href="{{site.repository_host_url}}/{{site.github.repository_nwo}}">
                             <img src="{{ '/assets/images/theme/github-icon.svg' | prepend: site.baseurl}}" width="25" style="padding-right: 8px;" />
                           </a>
                         </div>
                         <div style="white-space: nowrap;">
-                          <span class="mobile-remove">Release: </span>
                           {% if jekyll.environment == 'development' %}
-                            {{ site.data.dev_release.tag_name }}
-                              {% else %}
-                            {{ site.github.latest_release.tag_name }}
+                            {% if site.data.dev_release.tag_name != nil %}
+                              <span class="mobile-remove">Release: </span>{{ site.data.dev_release.tag_name }}
+                            {% endif %}
+                          {% else %}
+                            {% if site.github.latest_release.tag_name != nil %}
+                              <span class="mobile-remove">Release: </span>{{ site.github.latest_release.tag_name }}
+                            {% endif %}
                           {% endif %}
                         </div>
                       </div>
@@ -174,8 +127,8 @@
       topAppBar.listen('MDCTopAppBar:nav', (e) => {
         drawer.open = !drawer.open;
       });
-    </script>
 
+    </script>
     <script>
       const navigators = document.querySelectorAll('[data-href]');
         navigators.forEach(element => {
@@ -188,7 +141,7 @@
       mdc.autoInit();
     </script>
     <script>
-      runOnHook('PAGE_LOADED');
+      runOnHook('DOM_LOADED');
     </script>
   </body>
 </html>

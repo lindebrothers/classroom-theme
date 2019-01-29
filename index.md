@@ -1,7 +1,5 @@
 ---
-layout: page
+layout: index
 home: true
 ---
-
-test
-
+Hello World!

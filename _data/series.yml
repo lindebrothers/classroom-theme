@@ -1,0 +1,7 @@
+-
+  id: sample-serie
+  title: A sample of a serie
+#  tags:
+#    - sample-tag
+  classrooms:
+    - classroom
