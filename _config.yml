@@ -11,6 +11,7 @@ main_docs_name: lindebrosthers classroom theme
 host_url: https://www.github.com
 footer_sign: by developers @ Blocket
 logo_url: /_assets/images/theme/logo-inverted.svg
+host_org_name: https://pages.github.schibsted.io/blocket
 # Classrooms and Pages config ---------------------------------
 collections:
   classroom:
@@ -43,10 +44,10 @@ markdown: redcarpet
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "tables", "with_toc_data"]
 
-include: ['_posts', '_assets', '_pages', '_series']
+include: ['_posts', 'assets', '_pages', '_series']
 exclude: ['.sass_cache', 'README.md', 'docker-compose.yml', 'dev', 'Dockerfile']
 sass:
-  sass_dir: '_assets/_sass'
+  sass_dir: 'assets/_sass'
 plugins:
   - jekyll-github-metadata
 
