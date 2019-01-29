@@ -1,0 +1,99 @@
+
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-layout-grid__inner" id="tag-docs-container"></div>
+      </div>
+
+
+      <script>
+    const collectResult = () => {
+      const _searchWord = '{{page.doc-tag}}'
+      if (_searchWord !== '' && typeof _searchWord === 'string') {
+
+        const searchWords = []
+        searchWords.push(_searchWord)
+
+        const repos =  []
+        const classrooms =  []
+        const pages =  []
+
+        const _repoInfo = window.repoInfo
+        const searchForMatch = (needle, hay) => hay.some(h => h === needle)
+        searchWords.forEach(searchWord => {
+          _repoInfo.forEach(repo => {
+            if (repo.hasOwnProperty('tags')) {
+              if (searchForMatch(searchWord, repo.tags)) {
+                repos.push({primary: repo.name, secondary: repo.description ? repo.description : `/blocket/${repo.name}`, url: `/blocket/${repo.name}`, icon: 'home',})
+              }
+            }
+            repo.classes.forEach(cls => {
+              if (cls.hasOwnProperty('tags')) {
+                if (searchForMatch(searchWord, cls.tags)) {
+                  classrooms.push({primary: cls.title, secondary: `${repo.name}/`, url: cls.pages[0].url, icon: 'folder',})
+                }
+              }
+              cls.pages.forEach(page => {
+                if (page.hasOwnProperty('tags')) {
+                  if (searchForMatch(searchWord, page.tags)) {
+                    pages.push({primary: page.title, secondary: `${repo.name}/ ${cls.title}`, url: page.url, icon: 'description',})
+                  }
+                }
+              })
+            })
+          })
+        })
+
+        let output = ''
+        if (repos.length > 0 || classrooms.length > 0 || pages.length > 0) {
+
+          output = `${output}${printResult(repos, 'Repositories')}`
+          output = `${output}${printResult(classrooms, 'Classrooms')}`
+          output = `${output}${printResult(pages, 'Pages')}`
+        } else {
+          output = `${output}
+          <div class="mdc-layout-grid__cell--span-9">
+            <div class="mdc-list-divider"></div>
+            <h2>No items were found within this tag.</h2>
+            <p>Please, be the first to add docs to this tag.</p>
+          </div>
+          `
+        }
+
+        document.getElementById(`tag-docs-container`).innerHTML = output;
+      }
+
+    }
+    addToHook("REPOS_LOADED", collectResult);
+
+
+    const printResult = (array, title) => {
+
+      var node = ``
+      const array_length = array.length
+      if (array_length > 0 ) {
+        node = `${node}<div class="mdc-layout-grid__cell--span-12"><div class="mdc-list-divider"></div><h4>${title}</h4></div>`
+      }
+
+      array = utils.splitUp(array, 2)
+
+      array.forEach(col => {
+        node = `${node}<div class="mdc-layout-grid__cell--span-6"><ul class="mdc-list mdc-list--two-line" aria-orientation="vertical">`
+        col.forEach(item => {
+
+          node = `${node}
+          <a class="no-decoration" href="${ item.url }">
+            <li class="mdc-list-item">
+              <span class="mdc-list-item__graphic material-icons">${ item.icon }</span>
+              <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">${ item.primary }</span>
+                <span class="mdc-list-item__secondary-text" style="font-size:12px;">${ item.secondary }</span>
+              </span>
+            </li>
+          </a>
+          `
+        })
+        node = `${node}</ul></div>`
+      });
+      return node
+    }
+
+  </script>

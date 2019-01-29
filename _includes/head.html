@@ -1,0 +1,58 @@
+<head>
+  <script>
+    var hooks = {};
+    function addToHook(name, func) {
+      if(!hooks[name]) hooks[name] = [];
+      hooks[name].push(func);
+    }
+    function runOnHook(name, ...params){
+      if (hooks[name]) {
+        hooks[name].forEach(func => func(...params));
+      }
+    }
+  </script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width initial-scale=1">
+
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+
+  <link rel="shortcut icon" type="image/png" href="{{ '/favicon.png' | prepend: site.baseurl }}"/>
+  <link rel="icon" href="{{ '/_assets/favicon/favicon.png' | prepend: site.baseurl }}">
+
+
+  <link rel="stylesheet" href="{{ '/_assets/css/main.css' | prepend: site.baseurl }}">
+  <link rel="stylesheet" href="{{ '/_assets/css/material.css' | prepend: site.baseurl }}">
+  <script src="{{ '/_assets/js/material-components-web.min.js' | prepend: site.baseurl }}"></script>
+  <script src="{{ '/_assets/js/menu.js' | prepend: site.baseurl }}"></script>
+  <script src="{{ '/_assets/js/utils.js' | prepend: site.baseurl }}"></script>
+
+  <script src="{{ '/_assets/js/repo-info.js' | prepend: site.baseurl }}"></script>
+
+  <style>
+    @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      src: url({{ '/_assets/fonts/mdc-icons.woff2' | prepend: site.baseurl }}) format('woff2');
+    }
+
+    .material-icons {
+      font-family: 'Material Icons';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+

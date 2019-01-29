@@ -1,0 +1,91 @@
+{% if page.collection %}
+  {% assign links = site[page.collection] | sort: 'index' %}
+{% endif %}
+
+{% assign nextTitle =  %}
+{% assign nextLink =  %}
+
+
+{% for link in links %}
+  {% if link.title == page.title %}
+    {% unless forloop.first %}
+      {% assign prev = tmpprev %}
+    {% endunless %}
+    {% unless forloop.last %}
+      {% assign next = links[forloop.index] %}
+    {% endunless %}
+  {% endif %}
+  {% assign tmpprev = link %}
+{% endfor %}
+
+{% if next == nil %}
+  {% for serie in site.data.series %}
+    {% for class in serie.classrooms %}
+      {% if page.collection == class %}
+        {% if forloop.last == false %}
+          {% assign index = forloop.index0 | plus: 1 %}
+          {% assign nextClass = serie.classrooms[index] %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+  {% for site_collection in site.collections %}
+    {% if site_collection.label == nextClass %}
+      {% assign next = site_collection.docs | sort: 'index' | first %}
+      {% assign nextLink =  next.url %}
+      {% assign nextTitle =  site_collection.title | prepend: "Next class: "%}
+    {% endif %}
+  {% endfor %}
+
+{% else %}
+  {% assign nextTitle =  next.nav_title %}
+  {% assign nextLink =  next.url %}
+{% endif %}
+{% if prev == nil %}
+  {% for serie in site.data.series %}
+    {% for class in serie.classrooms %}
+      {% if page.collection == class %}
+        {% if forloop.first == false %}
+          {% assign index = forloop.index0 | minus: 1 %}
+          {% assign nextClass = serie.classrooms[index] %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+  {% for site_collection in site.collections %}
+    {% if site_collection.label == nextClass %}
+      {% assign prev = site_collection.docs | sort: 'index' | first %}
+      {% assign prevLink =  prev.url %}
+      {% assign prevTitle =  site_collection.title | prepend: "Prev. class: "%}
+    {% endif %}
+  {% endfor %}
+{% else %}
+  {% assign prevTitle = prev.nav_title %}
+  {% assign prevLink =  prev.url%}
+{% endif %}
+
+{% if prev or next %}
+  <div class="mdc-list-divider" style="margin-top: 20px;"></div>
+  <div class="flexViewRow paginator" style="height: unset; margin: 20px 0 20px 0;">
+    {% if prev %}
+      <div class="flexViewRow" style="justify-content: flex-start">
+        <a href="{{ prevLink | prepend: site.baseurl }}" class="no-decoration">
+            <div class="flexViewRow" style="height: unset; width: unset;">
+                <span class="material-icons" aria-label="Next">arrow_back</span>
+                <span class="mobile-remove" style="margin-left: 10px;">{{ prevTitle }}</span>
+            </div>
+        </a>
+      </div>
+    {% endif %}
+    {% if next %}
+      <div class="flexViewRow" style="justify-content: flex-end">
+        <a href="{{ nextLink | prepend: site.baseurl }}" class="no-decoration">
+            <div class="flexViewRow" style="height: unset; width: unset;">
+                <span class="mobile-remove" style="margin-right: 10px;">{{ nextTitle }}</span>
+                <span class="material-icons" aria-label="Next">arrow_forward</span>
+            </div>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

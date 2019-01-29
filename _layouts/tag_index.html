@@ -1,0 +1,54 @@
+---
+layout: default
+---
+<main class="main-content-innner-index">
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner" style="margin-bottom: 30px;">
+      <div class="mdc-layout-grid__cell--span-12" style="padding: 30px 0 0px 0;">
+        <h1>#{{ page.doc-tag }}</h1>
+      </div>
+
+      {%if page.highlighted != nil%}
+        <div class="mdc-layout-grid__cell--span-12">
+          <div class="mdc-list-divider"></div>
+          <h2>Highlighed links</h2>
+        </div>
+        {% assign highlighted = page.highlighted | sort: 'index' %}
+        {%for item in highlighted %}
+          {% if item.link contains "https:"%}
+            {% assign link = item.link %}
+          {%else%}
+            {% assign link = item.link | prepend: site.baseurl %}
+          {%endif%}
+          <div class="mdc-layout-grid__cell--span-4" style="padding: 30px 0 30px 0;">
+
+              <div class="flexViewRow" style="align-items: flex-start;">
+                <div class="flexView" style="width: 88px; padding-top: 10px;">
+                      {% if item.image %}
+                      <div class="circle" style="background-repeat: no-repeat; background-position: center; background-size: {% if item.nobackground %}100%{%else%}75%{%endif%}, 100%; background-image: url('{{ item.image | prepend: site.baseurl}}'), {% if item.nobackground %}none{%else%}linear-gradient(to bottom, #F0F5FB 0%, #e2ecf8 100%){%endif%}; width: 88px; height: 88px;">
+                      </div>
+                      {% else %}
+                      <div class="flexView circle" style="background-repeat: no-repeat; background-position: center; background-size: 100%; background-image: linear-gradient(to bottom, #F0F5FB 0%, #e2ecf8 100%); width: 88px; height: 88px;">
+                        <i style="font-size: 50px; color: #363636;" class="material-icons">{{ item.icon }}</i>
+                      </div>
+                      {%endif%}
+                </div>
+                <div class="flexView" style="align-items: flex-start; padding-left: 15px;">
+                    <h5 style="margin: 10px 0 0px 0;"><a href="{{ link }}" class="no-decoration">{{item.primary}}</a></h5>
+                    <span>{{item.secondary}}</span>
+                </div>
+              </div>
+          </div>
+        {%endfor%}
+      {%endif%}
+
+      {% include list_docs_in_tags_js.html %}
+    </div>
+  </div>
+</main>
+{% include contribution.html %}
+{% include footer.html %}
+
+
+
+

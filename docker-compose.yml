@@ -1,0 +1,19 @@
+# blocketdocs
+version: '3'
+services:
+
+  blocketdocs:
+    image: jekyll/jekyll:pages
+    environment:
+      - JEKYLL_GITHUB_TOKEN=${ENV_GITHUB_TOKEN}
+      - PAGES_API_URL=https://github.schibsted.io/api/v3
+      - PAGES_PAGES_HOSTNAME=github.schibsted.io
+      - JEKYLL_ENV=development
+      - SSL=true
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/srv/jekyll
+    command: jekyll serve --trace --watch --verbose
+
+

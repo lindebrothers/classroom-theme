@@ -1,0 +1,178 @@
+---
+layout: default
+---
+<script>
+  const loadHashes = () => {
+    const raw = window.location.hash.split('#');
+    const remove = raw.shift();
+    return {
+      primary: raw[0],
+      all: raw,
+    };
+  }
+</script>
+
+<main class="main-content-innner-index">
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner" style="margin-bottom: 30px;">
+      <div class="mdc-layout-grid__cell--span-12" style="padding: 30px 0 0px 0;">
+        <h1 id="tag-headline" >#</h1>
+      </div>
+
+      {%if page.highlighted != nil%}
+        <div class="mdc-layout-grid__cell--span-12">
+          <div class="mdc-list-divider"></div>
+          <h2>Highlighed links</h2>
+        </div>
+        {% assign highlighted = page.highlighted | sort: 'index' %}
+        {%for item in highlighted %}
+          {% if item.link contains "https:"%}
+            {% assign link = item.link %}
+          {%else%}
+            {% assign link = item.link | prepend: site.baseurl %}
+          {%endif%}
+          <div class="mdc-layout-grid__cell--span-4" style="padding: 30px 0 30px 0;">
+
+              <div class="flexViewRow" style="align-items: flex-start;">
+                <div class="flexView" style="width: 88px; padding-top: 10px;">
+                      {% if item.image %}
+                      <div class="circle" style="background-repeat: no-repeat; background-position: center; background-size: 75%, 100%; background-image: url('{{ item.image | prepend: site.baseurl}}'), linear-gradient(to bottom, #F0F5FB 0%, #e2ecf8 100%); width: 88px; height: 88px;">
+                      </div>
+                      {% else %}
+                      <div class="flexView circle" style="background-repeat: no-repeat; background-position: center; background-size: 100%; background-image: linear-gradient(to bottom, #F0F5FB 0%, #e2ecf8 100%); width: 88px; height: 88px;">
+                        <i style="font-size: 50px; color: #363636;" class="material-icons">{{ item.icon }}</i>
+                      </div>
+                      {%endif%}
+                </div>
+                <div class="flexView" style="align-items: flex-start; padding-left: 15px;">
+                    <h5 style="margin: 10px 0 0px 0;"><a href="{{ link }}" class="no-decoration">{{item.primary}}</a></h5>
+                    <span>{{item.secondary}}</span>
+                </div>
+              </div>
+          </div>
+        {%endfor%}
+      {%endif%}
+
+
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-layout-grid__inner" id="tag-docs-container"></div>
+      </div>
+
+      <script>
+    const collectResult = () => {
+      const _searchWord = loadHashes().primary
+      if (_searchWord !== '' && typeof _searchWord === 'string') {
+
+        const searchWords = []
+        searchWords.push(_searchWord)
+
+        const repos =  []
+        const classrooms =  []
+        const pages =  []
+
+        const _repoInfo = window.repoInfo
+        const searchForMatch = (needle, hay) => hay.some(h => h === needle)
+        searchWords.forEach(searchWord => {
+          _repoInfo.forEach(repo => {
+            if (repo.hasOwnProperty('tags')) {
+              if (searchForMatch(searchWord, repo.tags)) {
+                repos.push({primary: repo.name, secondary: repo.description ? repo.description : `/blocket/${repo.name}`, url: `/blocket/${repo.name}`, icon: 'home',})
+              }
+            }
+            repo.classes.forEach(cls => {
+              if (cls.hasOwnProperty('tags')) {
+                if (searchForMatch(searchWord, cls.tags)) {
+                  classrooms.push({primary: cls.title, secondary: `${repo.name}/`, url: cls.pages[0].url, icon: 'folder',})
+                }
+              }
+              cls.pages.forEach(page => {
+                if (page.hasOwnProperty('tags')) {
+                  if (searchForMatch(searchWord, page.tags)) {
+                    pages.push({primary: page.title, secondary: `${repo.name}/ ${cls.title}`, url: page.url, icon: 'description',})
+                  }
+                }
+              })
+            })
+          })
+        })
+
+        let output = ''
+        if (repos.length > 0 || classrooms.length > 0 || pages.length > 0) {
+
+          output = `${output}${printResult(repos, 'Repositories')}`
+          output = `${output}${printResult(classrooms, 'Classrooms')}`
+          output = `${output}${printResult(pages, 'Pages')}`
+        } else {
+          output = `${output}
+          <div class="mdc-layout-grid__cell--span-9">
+            <div class="mdc-list-divider"></div>
+            <h2>No items were found within this tag.</h2>
+            <p>Please, be the first to add docs to this tag.</p>
+          </div>
+          `
+        }
+
+        document.getElementById(`tag-docs-container`).innerHTML = output;
+      }
+
+    }
+    addToHook("REPOS_LOADED", collectResult);
+
+
+    const printResult = (array, title) => {
+
+      var node = ``
+      const array_length = array.length
+      if (array_length > 0 ) {
+        node = `${node}<div class="mdc-layout-grid__cell--span-12"><div class="mdc-list-divider"></div><h4>${title}</h4></div>`
+      }
+
+      array = utils.splitUp(array, 2)
+
+      array.forEach(col => {
+        node = `${node}<div class="mdc-layout-grid__cell--span-6"><ul class="mdc-list mdc-list--two-line" aria-orientation="vertical">`
+        col.forEach(item => {
+
+          node = `${node}
+          <a class="no-decoration" href="${ item.url }">
+            <li class="mdc-list-item">
+              <span class="mdc-list-item__graphic material-icons">${ item.icon }</span>
+              <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">${ item.primary }</span>
+                <span class="mdc-list-item__secondary-text" style="font-size:12px;">${ item.secondary }</span>
+              </span>
+            </li>
+          </a>
+          `
+        })
+        node = `${node}</ul></div>`
+      });
+      return node
+    }
+
+  </script>
+
+    </div>
+  </div>
+</main>
+<script>
+  const highlights = [
+  {% for doc-tag in site.data.doc-tags  %}
+    {
+      tag: '{{doc-tag.id}}',
+    },
+  {% endfor %}
+  ]
+  if (menuBuilder.items.some(i => i.id === loadHashes().primary)) {
+    window.location = `{{site.baseurl}}/tags/${loadHashes().primary}`
+  }
+  document.getElementById("tag-headline").innerHTML = `#${loadHashes().primary}`
+</script>
+
+
+{% include contribution.html %}
+{% include footer.html %}
+
+
+
+

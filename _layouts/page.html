@@ -1,0 +1,176 @@
+---
+layout: default
+---
+{% for site_collection in site.collections %}
+  {% if site_collection.label == page.collection %}
+    {% assign use_paginator = site_collection.use_paginator %}
+    {% assign collection_title = site_collection.title %}
+    {% assign collection_tags = site_collection.tags %}
+    {% assign current_collection = site_collection.docs | sort: 'index' %}
+    {% assign collection_tags_size = collection_tags | size %}
+  {% endif %}
+{% endfor %}
+
+<main class="main-content-innner-page">
+<section style="background: #F0F5FB; min-height: 200px;">
+  <div class="mdc-layout-grid" style="padding-top: 0px;">
+    <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-12">
+            <span style="color: #9A9999;">Classroom</span>
+            <h3 style="margin-top: 10px;">{{ collection_title}}</h3>
+
+
+            <div class="flexViewRow" style="align-items: flex-start; justify-content: flex-start;">
+                {% if collection_tags_size > 0 %}
+                <div class="mdc-chip-set" style="padding: 0px; margin-bottom: 20px;">
+                {% for tag in collection_tags %}
+                  <div class="mdc-chip" tabindex="0" style="margin: 0px; background-color: #4182c3; color: white; transform: scale(0.9);">
+                    <div class="mdc-chip__text" data-href="{{ '{{site.main_docs_repo_url}}}/tags/' | append: '#' | append: tag }}">#{{ tag }}</div>
+                  </div>
+                {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+
+            <div class="flexViewRow" style="height: unset; justify-content: space-between;">
+                  <div id="series-container-prev"></div>
+                  <div id="series-container-next"></div>
+            </div>
+                <script>
+                  var serie = Series.getSerie("{{page.collection}}")
+
+                  if (serie) {
+                    var prevClass = Series.getPreviousClass(serie.id, "{{page.collection}}")
+                  }
+
+                  if (prevClass) {
+                    var seriesContainer = document.getElementById("series-container-prev")
+                    seriesContainer.innerHTML = `
+
+                    <div class="flexViewRow" style="justify-content: flex-start">
+                      <a href="${prevClass.url}" class="no-decoration">
+                          <div class="flexViewRow" style="height: unset; width: unset;">
+                              <span class="material-icons" aria-label="Next">arrow_back</span>
+                              <span style="margin-left: 10px;">Prev class<span class="mobile-remove">: ${prevClass.nav_title}</span></span>
+                          </div>
+                      </a>
+                    </div>
+                    `
+                  }
+
+                  if (serie) {
+                    var nextClass = Series.getNextClass(serie.id, "{{page.collection}}")
+                  }
+
+                  if (nextClass) {
+                    seriesContainer = document.getElementById("series-container-next")
+                    seriesContainer.innerHTML = `
+                    <div class="flexViewRow" style="justify-content: flex-end">
+                      <a href="${nextClass.url}" class="no-decoration">
+                          <div class="flexViewRow" style="height: unset; width: unset;">
+                              <div style="margin-right: 10px;">Next class<span class="mobile-remove">: ${nextClass.nav_title}</span></div>
+                              <div class="material-icons" aria-label="Next">arrow_forward</div>
+                          </div>
+                      </a>
+                    </div>
+                    `
+                  }
+                </script>
+            <div class="mdc-list-divider" style="margin: 10px 0 20px 0;"></div>
+            <div class="flexViewRow" style="flex-flow: row wrap; justify-content: flex-start; align-items: flex-start;">
+            {% for slack in page.slack_channels %}
+              <div>
+              <a target="_blank" href="https://slack.com/app_redirect?channel={{slack.id}}" class="">
+                <div class="flexView" style="flex-direction: row; width: unset; height: unset;">
+                  <div style="width: 30px; height: 30px;" class="flexView">
+                    <img src="{{ '/_assets/images/theme/slack.svg' | prepend: site.baseurl}}" width="20" />
+                  </div>
+                  <div style="padding-left: 10px; padding-right: 20px;">
+                    {{slack.name}}
+                  </div>
+                </div>
+              </a>
+              </div>
+            {%endfor%}
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+<section class="mdc-layout-grid">
+  <div class="mdc-layout-grid__inner">
+    <div class="mdc-layout-grid__cell--span-3" style="padding-top: 38px;">
+      <div class="mdc-list-group">
+
+        <ul id="page-sub-list" class="mdc-list" aria-orientation="vertical" data-mdc-auto-init="MDCList">
+
+          {% for item in current_collection %}
+            <li class="mdc-list-item{% if item.url == page.url %} mdc-list-item--selected{% endif %}" {% if item.url == page.url %} aria-selected="true"{% endif %} data-href="{{ item.url | prepend: site.baseurl }}">
+                {% if item.list_icon != "" %}
+                  <span class="mdc-list-item__graphic material-icons" aria-hidden="true">{{ item.list_icon }}</span>
+                {% endif %}
+                {{ item.nav_title }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <article class="mdc-layout-grid__cell--span-9">
+        <h1>{{page.title}}</h1>
+      {% assign page_tags_size = page.tags | size %}
+      {% if page_tags_size > 0 %}
+        <div class="mdc-chip-set" style="padding: 0px; margin-bottom: 20px;">
+        {% for tag in page.tags %}
+          <div class="mdc-chip" tabindex="0" style="margin: 0px; background-color: #4182c3; color: white; transform: scale(0.9);">
+            <div class="mdc-chip__text" data-href="{{ '{{site.main_docs_repo_url}}/tags/#' | append: tag }}">#{{ tag }}</div>
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+      <div class="mdc-list-divider"></div>
+      {% assign authors_size = page.authors | size %}
+      {% if authors_size > 0 %}
+      <div class="flexView{% if authors_size < 3%}Row{%endif%}" style="height: unset; justify-content: flex-start; align-items: flex-start; padding: 20px 0 20px;">
+        <div class="flexView" style="height: 30px; width: unset;">Author{% if authors_size > 1%}s{%endif%}:</div>
+        <div class="flexViewRow" style="flex-flow: row wrap; justify-content: flex-start; align-items: flex-start;">
+          {% for author in page.authors %}
+          <div class="flexViewRow" style="height: 30px; width: unset; padding: 0 10px 0 10px;">
+              <div><img src="{{ site.avatar_base_url | append: "/" | append: author}}" style="height: 30px;" /></div>
+              <div style="padding: 0 0px 0 5px; white-space: nowrap;">@{{ author }}</div>
+          </div>
+          {%endfor%}
+        </div>
+      </div>
+      <div class="mdc-list-divider"></div>
+      {%endif%}
+      <div id="anchors-menu"></div>
+      {{ content }}
+      {% if use_paginator != false %}
+        {% include paginator.html %}
+      {% endif %}
+    </article>
+  </div>
+</section>
+</main>
+
+<script>
+  const anchorsMenu = document.getElementById("anchors-menu")
+  const anchors = document.querySelectorAll("a[name]")
+  let output = ''
+  anchors.forEach(item => {
+    const title = item.innerHTML
+    const link = item.getAttribute("name")
+    if (title) {
+      output = `${output}<a href="#${link}" class="no-decoration"><li class="mdc-list-item"><span class="mdc-list-item__graphic material-icons" aria-hidden="true">fast_forward</span><span class="mdc-list-item__text">${title}</span></li>`
+    }
+  });
+  if (output !== "") {
+    output = `<ul class="mdc-list">${output}</ul><div class="mdc-list-divider"></div>`
+  }
+  anchorsMenu.innerHTML = output
+</script>
+
+
+{% include footer.html %}
+

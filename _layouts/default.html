@@ -1,0 +1,194 @@
+
+
+
+
+{% for site_collection in site.collections %}
+  {% if site_collection.label == page.collection %}
+    {% assign slack_channel = site_collection.slack_channel %}
+    {% assign slack_channel_id = site_collection.slack_channel_id %}
+    {% assign collection_tags = site_collection.tags %}
+    {% assign collection_tags_size = collection_tags | size %}
+  {% endif %}
+{% endfor %}
+
+{% if slack_channel == null%}
+  {% assign slack_channel = site.data.slack.default_channel_name %}
+{% endif %}
+{% if slack_channel_id == null %}
+  {% assign slack_channel_id = site.data.slack.default_channel_id %}
+{% endif %}
+
+
+<!DOCTYPE html>
+<html>
+<style>
+ @media (min-width: 1200px) {
+  .mdc-layout-grid {
+      width: 1200px;
+  }
+
+}
+@media (max-width: 840px) {
+  .mobile-flex-wrap {
+    flex-flow: wrap;
+  }
+  .mobile-flex-reset {
+    flex-flow: wrap !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+  }
+  .truncate {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mobile-remove {
+    display: none;
+  }
+}
+</style>
+  {% include head.html %}
+
+  <body class="mdc-typography">
+    <aside class="mdc-drawer mdc-drawer--dismissible" data-mdc-auto-init="MDCDrawer">
+      <div class="mdc-drawer__content">
+        <nav class="mdc-list">
+          <a class="mdc-list-item mdc-list-item--activated" href="{{site.main_docs_repo_url}}" aria-selected="true">
+            <i class="material-icons mdc-list-item__graphic" aria-hidden="true">home</i>
+            <span class="mdc-list-item__text">{{site.main_docs_name}}</span>
+          </a>
+          <hr class="mdc-list-divider">
+          <h5 class="mdc-list-group__subheader">Tags</h5>
+
+
+          <ul id="blocket-docs-navigation" class="mdc-list" aria-orientation="vertical">
+          </ul>
+          <script>
+              const menuUL = document.getElementById("blocket-docs-navigation");
+              const menuContent = menuBuilder.items.map(tag => {
+                return `
+                <a class="no-decoration" href="${tag.link}">
+                  <li class="mdc-list-item ${
+                    menuBuilder.selecter(tag.link, '{{page.url}}')
+                  }">
+                    <span class="mdc-list-item__graphic material-icons">${ tag.icon }</span>
+                      <span class="mdc-list-item__text">
+                        #${tag.id}
+                      </span>
+                    </li>
+                </a>
+                `
+              })
+              menuUL.innerHTML = menuContent;
+          </script>
+        </nav>
+      </div>
+    </aside>
+    <header class="mdc-top-app-bar app-bar" id="app-bar">
+      <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start ">
+            <a href="#" class="material-icons mdc-top-app-bar__navigation-icon no-decoration">menu</a>
+          <span class="mdc-top-app-bar__title">
+            <a class="no-decoration white-link" href="{{ '/' | prepend: site.baseurl}}">
+              <img class="app-bar-logo" src="{{ site.logo_url | prepend: site.baseurl}}" />
+              {{site.main_docs_name}}
+            </a>
+          </span>
+        </section>
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+          <form id="search-form" method="get" action="">
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField" style="width: 250px; background-color: #3c77b3; color: white;">
+              <input type="text" id="q" class="mdc-text-field__input" style="background-color: #3c77b3; color: white; border-bottom: none;" />
+              <label class="mdc-floating-label" for="q" style="color: white;">Search</label>
+            </div>
+            <button
+              class="mdc-icon-button"
+              aria-label="Add to favorites"
+              aria-hidden="true"
+              aria-pressed="false">
+              <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">search</i>
+              <i class="material-icons mdc-icon-button__icon">search_border</i>
+            </button>
+          </form>
+          <script>
+            document.getElementById("search-form").addEventListener("submit", function(event) {
+              event.preventDefault();
+              let q = document.getElementById("q").value
+              q = q.replace(/ /gi, "+");
+              q = q.replace(/\</gi, "");
+              q = q.replace(/\>/gi, "");
+              window.location = `{{site.main_docs_repo_url}}/search?q=${q}`
+            });
+          </script>
+        </section>
+      </div>
+    </header>
+    <div class="mdc-drawer-app-content">
+      <div class="main-content" id="main-content" onClick="document.querySelector('.mdc-drawer').MDCDrawer.foundation_.close()">
+        <div class="mdc-top-app-bar--fixed-adjust">
+
+          <div style="width: 100%; background-color: #F0F5FB;">
+            <div class="mdc-layout-grid">
+              <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell--span-12">
+                  <div class="flexViewRow" style="justify-content: space-between; height: unset;">
+                      <div class="flexViewRow" style="align-items: flex-start; justify-content: flex-start; width: unset;">
+                        <div class="flexViewRow" style="width: unset;">
+                          <span class="material-icons" style="margin-right: 10px; color: #4182c3"><a class="no-decoration" href="{{ '/' | prepend: site.baseurl }}">home</a></span>
+                          <div class="mobile-remove" style="white-space: nowrap;"> <a class="no-decoration" href="{{ '/' | prepend: site.baseurl }}">{{site.repository_name}}</a></div>
+                        </div>
+                      </div>
+                      <div class="flexViewRow" style="align-items: center; justify-content: flex-end; width: 230px;">
+                        <div>
+                          <a href="/{{site.github.repository_nwo}}">
+                            <img src="{{ '/_assets/images/theme/github-icon.svg' | prepend: site.baseurl}}" width="25" style="padding-right: 8px;" />
+                          </a>
+                        </div>
+                        <div style="white-space: nowrap;">
+                          <span class="mobile-remove">Release: </span>
+                          {% if jekyll.environment == 'development' %}
+                            {{ site.data.dev_release.tag_name }}
+                              {% else %}
+                            {{ site.github.latest_release.tag_name }}
+                          {% endif %}
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{ content }}
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const prevent = e => {
+        e.preventDefault();
+      }
+      const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+      const topAppBar = mdc.topAppBar.MDCTopAppBar.attachTo(document.getElementById('app-bar'));
+      topAppBar.setScrollTarget(document.getElementById('main-content'));
+      topAppBar.listen('MDCTopAppBar:nav', (e) => {
+        drawer.open = !drawer.open;
+      });
+    </script>
+
+    <script>
+      const navigators = document.querySelectorAll('[data-href]');
+        navigators.forEach(element => {
+          element.addEventListener("click", e => {
+            window.location.href = e.target.getAttribute('data-href')
+        });
+      });
+    </script>
+    <script>
+      mdc.autoInit();
+    </script>
+    <script>
+      runOnHook('PAGE_LOADED');
+    </script>
+  </body>
+</html>
