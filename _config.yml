@@ -26,7 +26,7 @@ defaults:
       permalink: /:collection/:name
 
 # Preset build config ----------------------------------
-blocket_docs_baseurl: /blocket/docs
+
 
 # template configurations -------------------
 main_docs_repo_url: https://pages.github.com/lindebrothers/classroom-theme
@@ -34,7 +34,6 @@ main_docs_name: lindebrosthers classroom theme
 repository_host_url: https://www.github.com
 pages_url_with_org: https://pages.github.com/lindebrothers
 avatar_base_url: https://www.github.com
-
 footer_sign: by developers
 # site_logo_url:
 

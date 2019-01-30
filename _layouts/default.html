@@ -5,7 +5,7 @@
     <aside class="mdc-drawer mdc-drawer--dismissible" data-mdc-auto-init="MDCDrawer">
       <div class="mdc-drawer__content">
         <nav class="mdc-list">
-          <a class="mdc-list-item mdc-list-item--activated" href="/blocket/docs/" aria-selected="true">
+          <a class="mdc-list-item mdc-list-item--activated" href="{{site.main_docs_repo_url}}" aria-selected="true">
             <i class="material-icons mdc-list-item__graphic" aria-hidden="true">home</i>
             <span class="mdc-list-item__text">{{site.main_docs_name}}</span>
           </a>
@@ -42,7 +42,7 @@
             <a href="#" class="material-icons mdc-top-app-bar__navigation-icon no-decoration">menu</a>
           <span class="mdc-top-app-bar__title">
             <a class="no-decoration white-link" href="{{ '/' | prepend: site.main_docs_repo_url}}">
-              <img class="app-bar-logo" src="{{ '/assets/images/theme/blocket-symbol-inverted.svg' | prepend: site.baseurl}}" />
+              <img class="app-bar-logo" src="{{ '/_assets/images/theme/site-logo.svg' | prepend: site.main_docs_repo_url}}" />
               {{site.main_docs_name}}
             </a>
           </span>

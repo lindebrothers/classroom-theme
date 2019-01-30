@@ -24,7 +24,7 @@ layout: default
                       <div class="mdc-chip-set" style="padding: 0px; margin-bottom: 20px;">
                       {% for tag in collection_tags %}
                         <div class="mdc-chip" tabindex="0" style="margin: 0px; background-color: #4182c3; color: white; transform: scale(0.9);">
-                          <div class="mdc-chip__text" data-href="{{ '{{site.main_docs_repo_url}}/tags/#' | append: tag }}">#{{ tag }}</div>
+                          <div class="mdc-chip__text" data-href="{{ site.main_docs_repo_url | append: '/tags/#' | append: tag }}">#{{ tag }}</div>
                         </div>
                       {% endfor %}
                       </div>
@@ -126,7 +126,7 @@ layout: default
         <div class="mdc-chip-set" style="padding: 0px; margin-bottom: 20px;">
         {% for tag in page.tags %}
           <div class="mdc-chip" tabindex="0" style="margin: 0px; background-color: #4182c3; color: white; transform: scale(0.9);">
-            <div class="mdc-chip__text" data-href="{{ '{{site.main_docs_repo_url}}/tags/#' | append: tag }}">#{{ tag }}</div>
+            <div class="mdc-chip__text" data-href="{{ site.main_docs_repo_url | append: '/tags/#' | append: tag }}">#{{ tag }}</div>
           </div>
         {% endfor %}
         </div>
