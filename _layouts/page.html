@@ -147,6 +147,7 @@ layout: default
       </div>
       <div class="mdc-list-divider"></div>
       {%endif%}
+      <div id="anchors-menu"></div>
       {{ content }}
       {% if use_paginator != false %}
         {% include paginator.html %}
@@ -155,5 +156,21 @@ layout: default
   </div>
 </section>
 </main>
+<script>
+  const anchorsMenu = document.getElementById("anchors-menu")
+  const anchors = document.querySelectorAll("a[name]")
+  let output = ''
+  anchors.forEach(item => {
+    const title = item.innerHTML
+    const link = item.getAttribute("name")
+    if (title) {
+      output = `${output}<a href="#${link}" class="no-decoration"><li class="mdc-list-item"><span class="mdc-list-item__graphic material-icons" aria-hidden="true">fast_forward</span><span class="mdc-list-item__text">${title}</span></li>`
+    }
+  });
+  if (output !== "") {
+    output = `<ul class="mdc-list">${output}</ul><div class="mdc-list-divider"></div>`
+  }
+  anchorsMenu.innerHTML = output
+</script>
 {% include footer.html %}
 

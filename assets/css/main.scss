@@ -198,6 +198,13 @@ a:hover {
   font-weight: bold;
 }
 
+article a[name]:link,
+article a[name]:visited,
+article a[name]:active,
+article a[name]:hover, {
+  text-decoration: none !important;
+  color: black;
+}
 
 .main-content-innner-index {
   .site-promotion {
