@@ -1,0 +1,118 @@
+---
+layout: default
+---
+{% assign pages = site.pages | where: "layout", "simple" | sort: 'index' %}
+{% assign pages_size = pages | size %}
+
+
+<style>
+.hidden {
+  display: none;
+}
+</style>
+  <main class="main-content-innner-page">
+      <section class="mdc-layout-grid">
+          <div class="mdc-layout-grid__inner">
+            {% if pages_size > 1 %}
+            <div class="mdc-layout-grid__cell--span-3" style="padding-top: 38px;">
+              <div class="mdc-list-group">
+        
+                <ul id="page-sub-list" class="mdc-list" aria-orientation="vertical" data-mdc-auto-init="MDCList">
+        
+                  {% for item in pages %}
+                    <li class="mdc-list-item{% if item.url == page.url %} mdc-list-item--selected{% endif %}" {% if item.url == page.url %} aria-selected="true"{% endif %} data-href="{{ item.url | prepend: site.baseurl }}">
+                        <span class="mdc-list-item__graphic material-icons" aria-hidden="true">description</span>
+                        {{ item.title }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            {% endif%}
+            <article class="mdc-layout-grid__cell--span-{% if pages_size > 1 %}9{%else%}12{%endif%}">
+                {% if pages_size < 2 %}
+                <div class="flexView">
+                <div class="mobile-reset-container" style="width: 800px; margin: 20px; 0 20px 0">
+                {%endif%}
+                <h1 id="pageTitle">{{page.title}}</h1>
+              {% assign page_tags_size = page.tags | size %}
+              {% if page_tags_size > 0 %}
+                <div class="mdc-chip-set" style="padding: 0px; margin-bottom: 20px;">
+                {% for tag in page.tags %}
+                  <div class="mdc-chip" tabindex="0" style="margin: 0px; background-color: #4182c3; color: white; transform: scale(0.9);">
+                    <div class="mdc-chip__text" data-href="{{ site.main_docs_repo_url | append: '/tags/#' | append: tag }}">#{{ tag }}</div>
+                  </div>
+                {% endfor %}
+                </div>
+              {% endif %}
+              <div class="mdc-list-divider"></div>
+              {% assign authors_size = page.authors | size %}
+              {% if authors_size > 0 %}
+              <div class="flexView{% if authors_size < 3%}Row{%endif%}" style="height: unset; justify-content: flex-start; align-items: flex-start; padding: 20px 0 20px;">
+                <div class="flexView" style="height: 30px; width: unset;">Author{% if authors_size > 1%}s{%endif%}:</div>
+                <div class="flexViewRow" style="flex-flow: row wrap; justify-content: flex-start; align-items: flex-start;">
+                  {% for author in page.authors %}
+                  <div class="flexViewRow" style="height: 30px; width: unset; padding: 0 10px 0 10px;">
+                      <div><img src="{{ site.avatar_base_url | append: "/" | append: author}}" style="height: 30px;" /></div>
+                      <div style="padding: 0 0px 0 5px; white-space: nowrap;">@{{ author }}</div>
+                  </div>
+                  {%endfor%}
+                </div>
+              </div>
+              <div class="mdc-list-divider"></div>
+              {%endif%}
+              <div id="anchors-menu"></div>
+              <div id="inner-content" class="hidden markdown-body">
+              {{ content }}
+              </div>
+              {% if use_paginator != false %}
+                {% include paginator.html %}
+              {% endif %}
+              {% if pages_size < 2 %}
+              </div>
+              </div>
+              {%endif%}
+
+            </article>
+            <script>
+              const article = document.getElementsByTagName("article")[0]
+              const h1s = article.getElementsByTagName("h1")
+              if (h1s.length > 1) {
+                if (typeof h1s[1] !== "undefined") {
+                  const target = h1s[1]
+                  if (target.innerHTML === "{{page.title}}") {
+                    target.parentNode.removeChild(target);
+                  }
+                }
+              }
+              document.getElementById("pageTitle").innerHTML = "{{page.title}}"
+              document.getElementById("inner-content").classList.remove("hidden");
+            </script>
+          </div>
+        </section>
+  </main>
+  <section style="padding: 30px 0 30px 0; background-color: #f9f7f6;" >
+    <div class="mdc-layout-grid">
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-12">
+          <div class="flexView">
+            <h4>View the code</h4>
+            <div class="mobile-reset-container" style="min-width: 800px; min-height: 100px; margin: 20px; 0 20px 0">
+                <div class="flexViewRow">
+                    <a href="{{site.repository_host_url}}/{{site.repository}}">
+                      <img src="{{ '/assets/images/theme/github-icon.svg' | prepend: site.baseurl}}" width="64" style="padding-right: 16px;" />
+                    </a>
+                    <a class="mobile-remove" href="{{site.repository_host_url}}{{site.baseurl}}">
+                      @{{site.repository_name}}
+                    </a>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% include footer.html %}
+
+
+
