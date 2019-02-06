@@ -10,9 +10,34 @@ layout: default
   display: none;
 }
 </style>
+
   <main class="main-content-innner-page">
+      {% if page.home == true %}
+      <section class="site-promotion" style="text-align: center;
+      padding: 20px;
+      height: calc(50vh);
+      min-height: 600px;
+      max-height: 650px;
+      border-top: 1px solid #679bcf;
+      color: #fff;
+      background-color: #4182c3;">
+          <div class="flexView" style="flex-direction: column;">
+            <img src="{{ '/assets/images/theme/site-promo.svg' | prepend: site.main_docs_repo_url}}" width="45%" />
+            <h1 style="line-height: 3.5rem;">{{site.title}}</h1>
+            <h5>{{site.description}}</h5>
+            <div class="flexViewRow" style="height: unset; width: 400px; margin-top: 25px;">
+              <div class="flexView" style="height: 50px; width: 50px; margin: 10px;">
+                  <a href="https://pages.github.com/" target="_blank">
+                    <img src="{{ '/assets/images/theme/github-pages-logo.svg' | prepend: site.baseurl}}" width="125" />
+                  </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      {%endif%}
       <section class="mdc-layout-grid">
           <div class="mdc-layout-grid__inner">
+
             {% if pages_size > 1 %}
             <div class="mdc-layout-grid__cell--span-3" style="padding-top: 38px;">
               <div class="mdc-list-group">
