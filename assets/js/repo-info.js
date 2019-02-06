@@ -1,6 +1,9 @@
 ---
 ---
 
+{% assign simplePages = site.pages | where: "layout", "simple" | sort: 'index' %}
+{% assign simplePages_size = simplePages | size %}
+
 if (!window.repoInfo) {
   window.repoInfo = []
 }
@@ -40,52 +43,70 @@ window.repoInfo.push({
     {% endfor %}
   {% endfor %}
 {% endfor %}
+{% for item in simplePages %}
+  {% for _author in item.authors %}
+    {% assign site_authors = site_authors | push: _author %}
+  {% endfor %}
+{% endfor %}
 {% assign unique_site_authors  = site_authors | uniq %}
 
   contributors: [
-{% assign unique_site_authors_count = "" | split: ',' %}
-{% for auth in unique_site_authors %}
-  {% assign counter = 0 %}
-  {% for site_author in site_authors %}
-    {% if site_author == auth%}
-      {% assign counter = counter | plus: 1 %}
+  {% assign unique_site_authors_count = "" | split: ',' %}
+  {% for auth in unique_site_authors %}
+    {% assign counter = 0 %}
+    {% for site_author in site_authors %}
+      {% if site_author == auth%}
+        {% assign counter = counter | plus: 1 %}
+      {% endif%}
+    {% endfor %}
+    {
+        name: "{{auth}}",
+        count: {{counter}}
+    }
+    {% if forloop.last == false %}
+    ,
     {% endif%}
   {% endfor %}
-   {
-      name: "{{auth}}",
-      count: {{counter}}
-   }
-   {% if forloop.last == false %}
-   ,
-   {% endif%}
-{% endfor %}
-],
-classes: [
-  {% for collection in site.collections %}
-  {% if collection.label != 'doctags' and collection.label != 'posts'%}
-{
-  id: '{{collection.label}}',
-  title: '{{collection.title}}',
-  tags: [
-    {% for tag in collection.tags %}
-      "{{tag}}"{% if forloop.last == false %},{% endif%}
+  ],
+  classes: [
+    {% for collection in site.collections %}
+    {% if collection.label != 'doctags' and collection.label != 'posts'%}
+  {
+    id: '{{collection.label}}',
+    title: '{{collection.title}}',
+    tags: [
+      {% for tag in collection.tags %}
+        "{{tag}}"{% if forloop.last == false %},{% endif%}
+      {% endfor %}
+    ],
+    pages: [
+      {% assign docs = collection.docs | sort: 'index' %}
+      {% for doc in docs %}
+      {
+        title: '{{doc.nav_title}}',
+        url: '{{doc.url| prepend: site.baseurl}}',
+        tags: [
+          {% for tag in doc.tags %}
+            '{{tag}}'{% if forloop.last == false %},{% endif%}
+          {% endfor %}]
+      }{% if forloop.last == false %},{% endif%}
+      {% endfor %}
+    ]
+  },
+    {% endif%}
     {% endfor %}
   ],
-  pages: [
-    {% assign docs = collection.docs | sort: 'index' %}
-    {% for doc in docs %}
+
+  simplePages: [
+    {% for item in simplePages %}
     {
-      title: '{{doc.nav_title}}',
-      url: '{{doc.url| prepend: site.baseurl}}',
+      title: '{{item.title}}',
+      url: '{{item.url| prepend: site.baseurl}}',
       tags: [
-        {% for tag in doc.tags %}
+        {% for tag in item.tags %}
           '{{tag}}'{% if forloop.last == false %},{% endif%}
         {% endfor %}]
     }{% if forloop.last == false %},{% endif%}
-    {% endfor %}
-  ]
-},
-  {% endif%}
   {% endfor %}
-],
+  ]
 });
