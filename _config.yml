@@ -38,6 +38,8 @@ footer_sign: by developers
 # site_logo_url:
 
 markdown: kramdown
+mermaid:
+  src: 'path/to/mermaid.js'
 
 include: ['_posts', '_pages', 'assets', '_series', '_classroom']
 exclude: ['.sass_cache', 'README.md', 'docker-compose.yml', 'dev', 'Dockerfile']
