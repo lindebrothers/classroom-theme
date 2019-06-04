@@ -143,6 +143,9 @@
     <script>
       runOnHook('DOM_LOADED');
     </script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>
+      mermaid.initialize({startOnLoad:true});
+      window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+    </script>
   </body>
 </html>
